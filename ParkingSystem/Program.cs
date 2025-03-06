@@ -37,6 +37,9 @@ namespace ParkingSystem
                     case "status":
                         parkingLot.status();
                         break;
+                    case "free_slots":
+                        parkingLot.getFreeSlots();
+                        break;
                     case "type_of_vehicles":
                         if (Enum.TryParse<VehicleType>(consoleInput[1], true, out VehicleType vehicleType1)) {
                             parkingLot.countVehicleType(vehicleType1);

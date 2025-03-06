@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ParkingSystem
@@ -8,6 +9,7 @@ namespace ParkingSystem
     {
         private int totalLots;
         private Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
+        private double parkingPrice = 2000;
 
         public void createParkingLot(int n)
         {
@@ -40,8 +42,16 @@ namespace ParkingSystem
                 Console.WriteLine("Invalid slot number");
                 return;
             }
+
+            DateTime exitTime = DateTime.Now;
+            TimeSpan span = exitTime.Subtract(vehicles[slot].EntryTime);
+            double hours = Math.Ceiling((double)span.TotalSeconds / 3600);
+
             vehicles.Remove(slot);
+            
             Console.WriteLine("Slot number " + slot + " is free");
+            Console.WriteLine("Parking hours: " + hours);
+            Console.WriteLine("Parking Bill: " + (hours * parkingPrice));
         }
 
         public void status()
@@ -51,6 +61,26 @@ namespace ParkingSystem
             {
                 Console.WriteLine(vehicle.Key + "\t" + vehicle.Value.registrationNumber + "\t" + vehicle.Value.color);
             }
+        }
+
+        public void getFreeSlots()
+        {
+            List<int> freeSlots = new List<int>();
+            for(int i = 1; i <= totalLots; i++)
+            {
+                if(!vehicles.ContainsKey(i))
+                {
+                    freeSlots.Add(i);
+                }
+            }
+
+            if(freeSlots.Count == 0)
+            {
+                Console.WriteLine("All slots are full");
+                return;
+            }
+
+            Console.WriteLine(string.Join(", ", freeSlots));
         }
 
         public void countVehicleType(VehicleType type)
